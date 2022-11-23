@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://live.zwidgets.com/js-sdk/1.1/ZohoEmbededAppSDK.min.js"></script>
+  </head>
+  <body>
+    <form id="itsMyForm">
+      <p>
+        Wallet Address:<input
+          type="text"
+          id="WalletAddress"
+          name="WalletAddress"
+          placeholder="Enter Wallet Address"
+          size="50"
+        />
+        <button class="Submitbutton" id="SubmitReset" type="button">
+          S U B M I T</button
+        ><br /><br />
+      </p>
+    </form>
+
+    <h2>Wallet Details</h2>
+
+    <table id="customers">
+      <tr>
+        <label for="Balance">Balance: </label>
+        <input type="text" id="balance" style="border: none" size="40" />
+      </tr>
+      <br />
+      <tr>
+        <label for="TotalReceived">TotalReceived: </label>
+        <input type="text" id="TotalReceived" style="border: none" size="40" />
+      </tr>
+      <br />
+      <tr>
+        <label for="TotalSpent">TotalSpent: </label>
+        <input type="text" id="TotalSpent" style="border: none" size="40" />
+      </tr>
+      <br />
+      <tr>
+        <label for="FirstTransaction">First Transaction: </label>
+        <input
+          type="text"
+          id="FirstTransaction"
+          style="border: none"
+          size="40"
+        />
+      </tr>
+      <br />
+      <tr>
+        <label for="LastTransaction">Last Transaction: </label>
+        <input
+          type="text"
+          id="LastTransaction"
+          style="border: none"
+          size="40"
+        />
+      </tr>
+      <br />
+      <tr>
+        <label for="Trxcounts">Trx counts: </label>
+        <input type="text" id="Trxcounts" style="border: none" size="40" />
+      </tr>
+    </table>
+  </br>
+    <h2>Transaction History</h2>
+    <table id="transaction" border="1">  <tr>
+      <th>Type</th>
+      <th>Trx Date</th>
+      <th>Amount</th>
+      <th>From Addr</th>
+      <th>To Addr</th>
+    </tr></table>
+
+  </br>
+    <h2>NFT Details</h2>
+    <table id="nft" border="1">  <tr>
+      <th>Name</th>
+      <th>Token Addr</th>
+      <th>Token URI</th>
+    </tr></table>
+  </body>
+  <script>
+    var buttonbtn = document.getElementById("SubmitReset");
+    buttonbtn.addEventListener("click", myfunctionAdd);
+    let userId;
+    let personId;
+    function myfunctionAdd() {
+      console.log(
+        "***********************************submit clicked...*************"
+      );
+      var WalletAddress = document.getElementById("WalletAddress").value;
+      console.log("WalletAddress: ", WalletAddress);
+      //ZOHO.embeddedApp.init();
+      console.log("invoking connector");
+      var x = {
+        id: "",
+        companyId: "1",
+        userId: userId,
+        personId: personId,
+        platformId: "zoho",
+        walletAddress: WalletAddress,
+      };
+
+      console.log("x:", x);
+
+      ZOHO.CRM.CONNECTOR.invokeAPI("hashi.hashi.balance0", x).then(function (
+        data
+      ) {
+        console.log("status_code", data.status_code);
+        var obj = JSON.parse(data.response);
+        console.log("obj.data.balance   : ", obj.data.balance);
+        document.getElementById("balance").value = obj.data.balance;
+        document.getElementById("TotalReceived").value = obj.data.totalReceive;
+        document.getElementById("TotalSpent").value = obj.data.totalSpent;
+        document.getElementById("FirstTransaction").value =
+          obj.data.firstBalanceChangeHub;
+        document.getElementById("LastTransaction").value =
+          obj.data.lastBalanceChangeHub;
+        document.getElementById("Trxcounts").value = obj.data.transactionCount;
+      });
+
+      /* ZOHO.embeddedApp.on("PageLoad", function (data) {
+        console.log("paegload response: ", data);
+
+
+        //ZOHO.CRM.CONNECTOR.authorize("hashi.hashi").then(function (data) {
+        //console.log("data1 ", data);
+        // });
+
+        //var data = {};
+        var x = {
+          id: "",
+          companyId: "1",
+          userId: "",
+          personId: "",
+          platformId: "zoho",
+          walletAddress: "",
+        };
+
+
+        ZOHO.CRM.CONNECTOR.invokeAPI("hashi.hashi.balance0", x).then(
+          function (data) {
+            console.log("api response balance", data);
+          }
+        );
+        //data = {};
+        //ZOHO.CRM.CONNECTOR.invokeAPI("hashi.hashi.balance", data).then(
+        //function (data) {
+        //console.log("api response3", data);
+        //}
+        //);
+      });*/
+
+      console.log("before init");
+      ZOHO.embeddedApp.init();
+      console.log("after init");
+
+      //ZOHO.CRM.CONFIG.getCurrentUser().then(function (data) {
+      //console.log(data);
+      //});
+
+      //var connectorName = "hashi.hashi";
+      //ZOHO.CRM.CONNECTOR.authorize(connectorName).then(function (data1) {
+      //console.log("********authorized *****");
+      //});
+
+      //console.log("*********connector authorized *****");
+
+      // var data = {};
+      // ZOHO.CRM.CONNECTOR.invokeAPI("hashi.hashi.balance0", data).then(function (
+      // data
+      // ) {
+      // console.log("api response2", data);
+      // });
+
+      //console.log(
+      //"***********************************submit clicked fnished..*************"
+      //);
+    }
+    function onPageLoad() {
+      ZOHO.embeddedApp.on("PageLoad", async function (data) {
+        var x = {
+          id: "",
+          companyId: "1",
+          userId: "",
+          personId: "",
+          platformId: "zoho",
+          walletAddress: "",
+        };
+
+        console.log("paegload response: ", data);
+        personId = data.EntityId;
+        x.personId = personId;
+
+        //let users = ZOHO.CRM.CONFIG.getCurrentUser();
+        let users = await getUser();
+        // .then(function (data) {
+        console.log("in get current usrs", users.users[0].zuid);
+        userId = users.users[0].zuid;
+        x.userId = userId;
+        // });
+
+        console.log("x ", x);
+        ZOHO.CRM.CONNECTOR.invokeAPI("hashi.hashi.wallet0", x).then(function (
+          data
+        ) {
+          var wallet = JSON.parse(data.response);
+          console.log("api response wallet", wallet);
+          //if ()
+
+          if (wallet.walletAddress && wallet.walletAddress !== "") {
+            //x.walletAddress = "0xC9D0Ef45068474DB7A6321848b41265f51fD280A"; //data.response.
+            //x.id = 1; //data.response
+            document.getElementById("WalletAddress").value =
+              wallet.walletAddress;
+            x.walletAddress = wallet.walletAddress;
+
+            ZOHO.CRM.CONNECTOR.invokeAPI("hashi.hashi.balance0", x).then(
+              function (data) {
+                console.log("api response balance on load", data);
+                console.log("data.balance : ", data.balance);
+                var obj = JSON.parse(data.response);
+                console.log("obj.data.balance   : ", obj.data.balance);
+                document.getElementById("balance").value = obj.data.balance;
+                document.getElementById("TotalReceived").value =
+                  obj.data.totalReceive;
+                document.getElementById("TotalSpent").value =
+                  obj.data.totalSpent;
+                document.getElementById("FirstTransaction").value =
+                  obj.data.firstBalanceChangeHub;
+                document.getElementById("LastTransaction").value =
+                  obj.data.lastBalanceChangeHub;
+                document.getElementById("Trxcounts").value =
+                  obj.data.transactionCount;
+              }
+            );
+
+            
+            ZOHO.CRM.CONNECTOR.invokeAPI("hashi.hashi.gettransaction", x).then(
+              function (data) {
+                console.log("api response transaction data  : ", data.response);
+                var obj = JSON.parse(data.response);
+                console.log("api response obj   : ", obj.results[0]);
+                let table = document.getElementById('transaction');
+
+for (let trx of obj.results) {
+	let tr = document.createElement('tr');
+	
+	let td1 = document.createElement('td');
+	td1.textContent = trx.title;
+	tr.appendChild(td1);
+	
+	let td2 = document.createElement('td');
+	td2.textContent = trx.created_at;
+	tr.appendChild(td2);
+
+  let td22 = document.createElement('td');
+	td22.textContent = trx.value_usd  ;
+	tr.appendChild(td22);
+	
+	let td3 = document.createElement('td');
+	td3.textContent = trx.from_address;
+	tr.appendChild(td3);
+
+  let td4 = document.createElement('td');
+	td4.textContent = trx.to_address;
+	tr.appendChild(td4);
+
+	table.appendChild(tr);
+}
+              }
+            );
+
+            ZOHO.CRM.CONNECTOR.invokeAPI("hashi.hashi.getnft", x).then(
+              function (data) {
+                console.log("api response nft data  : ", data.response);
+                var obj = JSON.parse(data.response);
+                console.log("api response obj   : ", obj.results[0]);
+                let nfttable = document.getElementById('nft');
+
+for (let nft of obj.results) {
+	let tr = document.createElement('tr');
+	
+	let td1 = document.createElement('td');
+	td1.textContent = nft.name;
+	tr.appendChild(td1);
+	
+	let td2 = document.createElement('td');
+	td2.textContent = nft.token_address;
+	tr.appendChild(td2);
+
+  let td22 = document.createElement('td');
+	td22.textContent = nft.token_uri  ;
+	tr.appendChild(td22);
+
+
+	nfttable.appendChild(tr);
+}
+              }
+            );
+
+
+          }
+        });
+      });
+
+      async function getUser() {
+        return ZOHO.CRM.CONFIG.getCurrentUser();
+      }
+
+      console.log("before init");
+      ZOHO.embeddedApp.init();
+      console.log("after init");
+    }
+    window.onload = onPageLoad;
+  </script>
+</html>
